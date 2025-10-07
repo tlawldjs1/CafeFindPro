@@ -4,7 +4,7 @@ export default function Footer() {
       <div className="max-w-6xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div>
-            <h3 className="text-2xl font-bold mb-4">카파인드</h3>
+            <h3 className="text-2xl font-bold mb-4">cafefind_pro</h3>
             <p className="text-muted-foreground mb-4">
               서울 카공 최적 카페 찾기 서비스
             </p>
@@ -14,7 +14,7 @@ export default function Footer() {
             <dl className="space-y-2 text-sm text-muted-foreground">
               <div>
                 <dt className="inline font-medium">사업자명:</dt>
-                <dd className="inline ml-2">카파인드</dd>
+                <dd className="inline ml-2">cafefind_pro</dd>
               </div>
               <div>
                 <dt className="inline font-medium">개인정보책임자:</dt>
@@ -28,7 +28,7 @@ export default function Footer() {
           </div>
         </div>
         <div className="mt-8 pt-8 border-t text-center text-sm text-muted-foreground">
-          <p>&copy; 2024 카파인드. All rights reserved.</p>
+          <p>&copy; 2024 cafefind_pro. All rights reserved.</p>
         </div>
       </div>
     </footer>
