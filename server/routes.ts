@@ -128,7 +128,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Combine priority results first, then fallback if needed
       const combinedResults = [...priorityResults, ...fallbackResults];
-      const uniqueResults = combinedResults.slice(0, 8);
+      const uniqueResults = combinedResults.slice(0, 12);
       
       res.json(uniqueResults);
     } catch (error) {
