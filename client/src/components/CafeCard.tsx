@@ -50,7 +50,6 @@ export default function CafeCard({ cafe }: CafeCardProps) {
           <Users className="w-3 h-3" />
           좌석 {cafe.seatCount}석
         </Badge>
-        <Badge variant="outline">카공 추천</Badge>
       </div>
     </Card>
   );

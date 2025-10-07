@@ -12,7 +12,7 @@ export default function CafeResults({ cafes, district }: CafeResultsProps) {
   }
 
   return (
-    <section className="py-12 px-4 md:px-8 bg-muted/20">
+    <section className="py-12 px-4 md:px-8">
       <div className="max-w-6xl mx-auto">
         <h3 className="text-2xl font-bold mb-6">
           {district} 카공 추천 카페

@@ -68,15 +68,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
               }
               seenIds.add(uniqueId);
 
-              const hasOutlets = ['스타벅스', '투썸', '메가커피', '이디야', '할리스', '커피빈', '파스쿠찌', '엔제리너스', '스터디'].some(
+              // 콘센트 여부: 프랜차이즈와 스터디카페는 대부분 있음
+              const hasOutlets = ['스타벅스', '투썸', '메가커피', '이디야', '할리스', '커피빈', '파스쿠찌', '엔제리너스', '스터디', '카공'].some(
                 brand => cleanName.includes(brand)
               );
 
-              let seatCount = 30;
+              // 좌석 수: 카페 유형에 따라 다양하게 설정
+              let seatCount = 25;
               if (cleanName.includes('스터디카페')) {
                 seatCount = 50;
-              } else if (['스타벅스', '투썸'].some(b => cleanName.includes(b))) {
+              } else if (cleanName.includes('스타벅스')) {
                 seatCount = 60;
+              } else if (cleanName.includes('투썸플레이스') || cleanName.includes('투썸')) {
+                seatCount = 55;
+              } else if (cleanName.includes('메가커피')) {
+                seatCount = 35;
+              } else if (['이디야', '할리스', '커피빈', '파스쿠찌'].some(b => cleanName.includes(b))) {
+                seatCount = 40;
+              } else if (cleanName.includes('카공') || cleanName.includes('공부')) {
+                seatCount = 45;
               }
 
               let studyRating = 3;
