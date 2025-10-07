@@ -93,7 +93,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
                 hasOutlets,
                 seatCount,
                 studyRating,
-                link: item.link || `https://map.naver.com/v5/search/${encodeURIComponent(cleanName + ' ' + address)}`
+                link: item.link || `https://map.naver.com/v5/search/${encodeURIComponent(cleanName)}`
               };
 
               // Prioritize results with district in address
