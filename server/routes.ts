@@ -24,9 +24,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const searchQueries = [
         `${district} 카공카페`,
         `${district} 스터디카페`,
+        `${district} 감성카페`,
         `${district} 스타벅스`,
         `${district} 투썸플레이스`,
         `${district} 메가커피`,
+        `${district} 이디야`,
+        `${district} 할리스`,
+        `${district} 커피빈`,
         `${district} 카페`,
       ];
 
