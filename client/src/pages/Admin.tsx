@@ -1,55 +1,77 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
+import type { SearchLog, CafeSubmission } from '@shared/schema';
 
 export default function Admin() {
   const { toast } = useToast();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [searchLogs, setSearchLogs] = useState<SearchLog[]>([]);
+  const [submissions, setSubmissions] = useState<CafeSubmission[]>([]);
 
-  // TODO: remove mock functionality
-  const mockSearchLogs = [
-    { id: '1', district: '강남구', timestamp: '2024-01-15 14:30' },
-    { id: '2', district: '서초구', timestamp: '2024-01-15 15:45' },
-    { id: '3', district: '송파구', timestamp: '2024-01-15 16:20' }
-  ];
-
-  const mockSubmissions = [
-    {
-      id: '1',
-      cafeName: '카페 온리',
-      cafeLocation: '서울특별시 강남구',
-      reporterName: '김철수',
-      phoneNumber: '010-1234-5678',
-      timestamp: '2024-01-15 13:00'
-    },
-    {
-      id: '2',
-      cafeName: '스터디카페 집중',
-      cafeLocation: '서울특별시 서초구',
-      reporterName: '이영희',
-      phoneNumber: '010-9876-5432',
-      timestamp: '2024-01-15 14:15'
+  useEffect(() => {
+    if (isAuthenticated) {
+      fetchData();
     }
-  ];
+  }, [isAuthenticated]);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const fetchData = async () => {
+    try {
+      const [logsRes, submissionsRes] = await Promise.all([
+        fetch('/api/admin/search-logs'),
+        fetch('/api/admin/cafe-submissions')
+      ]);
+
+      if (logsRes.ok) {
+        const logs = await logsRes.json();
+        setSearchLogs(logs);
+      }
+
+      if (submissionsRes.ok) {
+        const subs = await submissionsRes.json();
+        setSubmissions(subs);
+      }
+    } catch (error) {
+      console.error('Failed to fetch admin data:', error);
+    }
+  };
+
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (username === 'admin' && password === '000000') {
-      setIsAuthenticated(true);
-      toast({
-        title: '로그인 성공',
-        description: '관리자 페이지에 접속했습니다.'
+    
+    try {
+      const response = await fetch('/api/admin/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password }),
       });
-    } else {
+
+      if (response.ok) {
+        setIsAuthenticated(true);
+        toast({
+          title: '로그인 성공',
+          description: '관리자 페이지에 접속했습니다.'
+        });
+      } else {
+        toast({
+          title: '로그인 실패',
+          description: '아이디 또는 비밀번호가 올바르지 않습니다.',
+          variant: 'destructive'
+        });
+      }
+    } catch (error) {
+      console.error('Login error:', error);
       toast({
         title: '로그인 실패',
-        description: '아이디 또는 비밀번호가 올바르지 않습니다.',
+        description: '로그인 중 오류가 발생했습니다.',
         variant: 'destructive'
       });
     }
@@ -125,12 +147,22 @@ export default function Admin() {
                     </tr>
                   </thead>
                   <tbody>
-                    {mockSearchLogs.map((log) => (
-                      <tr key={log.id} className="border-b" data-testid={`row-search-${log.id}`}>
-                        <td className="py-3 px-4">{log.district}</td>
-                        <td className="py-3 px-4 text-muted-foreground">{log.timestamp}</td>
+                    {searchLogs.length === 0 ? (
+                      <tr>
+                        <td colSpan={2} className="py-8 text-center text-muted-foreground">
+                          검색 기록이 없습니다
+                        </td>
                       </tr>
-                    ))}
+                    ) : (
+                      searchLogs.map((log) => (
+                        <tr key={log.id} className="border-b" data-testid={`row-search-${log.id}`}>
+                          <td className="py-3 px-4">{log.district}</td>
+                          <td className="py-3 px-4 text-muted-foreground">
+                            {new Date(log.timestamp).toLocaleString('ko-KR')}
+                          </td>
+                        </tr>
+                      ))
+                    )}
                   </tbody>
                 </table>
               </div>
@@ -152,15 +184,25 @@ export default function Admin() {
                     </tr>
                   </thead>
                   <tbody>
-                    {mockSubmissions.map((submission) => (
-                      <tr key={submission.id} className="border-b" data-testid={`row-submission-${submission.id}`}>
-                        <td className="py-3 px-4">{submission.cafeName}</td>
-                        <td className="py-3 px-4">{submission.cafeLocation}</td>
-                        <td className="py-3 px-4">{submission.reporterName}</td>
-                        <td className="py-3 px-4">{submission.phoneNumber}</td>
-                        <td className="py-3 px-4 text-muted-foreground">{submission.timestamp}</td>
+                    {submissions.length === 0 ? (
+                      <tr>
+                        <td colSpan={5} className="py-8 text-center text-muted-foreground">
+                          제보된 카페가 없습니다
+                        </td>
                       </tr>
-                    ))}
+                    ) : (
+                      submissions.map((submission) => (
+                        <tr key={submission.id} className="border-b" data-testid={`row-submission-${submission.id}`}>
+                          <td className="py-3 px-4">{submission.cafeName}</td>
+                          <td className="py-3 px-4">{submission.cafeLocation}</td>
+                          <td className="py-3 px-4">{submission.reporterName}</td>
+                          <td className="py-3 px-4">{submission.phoneNumber}</td>
+                          <td className="py-3 px-4 text-muted-foreground">
+                            {new Date(submission.timestamp).toLocaleString('ko-KR')}
+                          </td>
+                        </tr>
+                      ))
+                    )}
                   </tbody>
                 </table>
               </div>
