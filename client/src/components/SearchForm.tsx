@@ -25,11 +25,17 @@ export default function SearchForm({ onSearch, isSearching = false }: SearchForm
   };
 
   return (
-    <section className="py-20 px-4 md:px-8 bg-muted/30">
-      <div className="max-w-4xl mx-auto">
-        <h2 className="text-3xl md:text-5xl font-bold text-center mb-4">
-          카공하기 좋은 카페 찾기
-        </h2>
+    <section className="py-20 px-4 md:px-8 bg-muted/30 relative overflow-hidden">
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <div className="w-[600px] h-[600px] bg-primary/5 rounded-full blur-3xl"></div>
+      </div>
+      <div className="max-w-4xl mx-auto relative">
+        <div className="relative flex justify-center mb-4">
+          <div className="absolute -inset-8 bg-primary/10 rounded-2xl blur-xl"></div>
+          <h2 className="text-3xl md:text-5xl font-bold text-center relative">
+            카공하기 좋은 카페 찾기
+          </h2>
+        </div>
         <p className="text-center text-muted-foreground mb-10 text-lg">
           서울시 행정구역을 선택하고 검색해보세요
         </p>
