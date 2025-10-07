@@ -1,62 +1,46 @@
-# 카파인드 (CaFind) - Seoul Cafe Finder
+# Replit.md
 
 ## Overview
-A cafe finder service for students in Seoul looking for study-friendly cafes (카공). The application uses the Naver Search API to find cafes and displays information about outlets, seating capacity, and study suitability.
 
-## Recent Changes (October 2024)
-- Implemented Naver Search API integration with multiple search queries
-- Added PostgreSQL database for storing search logs and cafe submissions
-- Created admin dashboard for viewing user activity
-- Removed placeholder images, using icons instead
-- Implemented district-based filtering with fallback logic
+This appears to be an empty or newly initialized repository with no existing code, configuration files, or documentation. The project structure and architectural decisions have not yet been established.
 
-## Project Architecture
+## User Preferences
 
-### Frontend (React + Tailwind)
-- **Home Page**: Landing page with hero section, problem scenarios, search form, results display, and submission form
-- **Admin Page**: Dashboard for viewing search logs and cafe submissions
-- Korean language support with Noto Sans KR font
-- Mobile-responsive design
+Preferred communication style: Simple, everyday language.
 
-### Backend (Express + TypeScript)
-- **Naver Search API**: Searches for cafes across multiple categories (study cafes, franchises, independent cafes)
-- **Database**: PostgreSQL (Neon) for permanent storage of search logs and submissions
-- **Admin Authentication**: Hardcoded credentials (admin/000000) as per requirements
+## System Architecture
 
-### Key Features
-1. **Search Functionality**
-   - District-based search (25 Seoul districts)
-   - Multiple query types: 카공카페, 스터디카페, 스타벅스, 투썸플레이스, 메가커피
-   - Priority + fallback result system for better coverage
-   
-2. **Cafe Information**
-   - Outlet availability (콘센트 여부)
-   - Seat count estimate (좌석 수)
-   - Study suitability rating (카공 적합 여부, 5-star)
-   - Direct Naver Map links
+**Status**: Not yet defined
 
-3. **Database Storage**
-   - All search queries logged with timestamp
-   - Cafe submissions permanently stored
-   - Admin can view real-time data
+This repository does not contain any code or configuration files that would indicate architectural decisions. The following aspects remain to be determined:
 
-4. **Admin Dashboard**
-   - Login: admin / 000000
-   - View search logs
-   - View cafe submissions
+- **Frontend Framework**: No frontend code or configuration detected
+- **Backend Framework**: No backend code or configuration detected
+- **Database Layer**: No database schema or ORM configuration detected
+- **Authentication**: No authentication implementation detected
+- **API Design**: No API routes or controllers detected
+- **Build Tools**: No build configuration detected
 
-## Technical Stack
-- **Frontend**: React, Tailwind CSS, Wouter (routing), TanStack Query
-- **Backend**: Express, TypeScript
-- **Database**: PostgreSQL (Neon), Drizzle ORM
-- **API**: Naver Search API (Local Search)
+Once code is added to this repository, this section should be updated to reflect:
+1. The chosen technology stack and reasoning
+2. Application structure and organization patterns
+3. Data flow and state management approaches
+4. Code organization principles
+5. Testing strategies
 
-## Environment Variables
-- `NAVER_CLIENT_ID`: Naver API client ID
-- `NAVER_CLIENT_SECRET`: Naver API client secret
-- `DATABASE_URL`: PostgreSQL connection string
+## External Dependencies
 
-## Business Information
-- **사업자명**: 카파인드
-- **개인정보책임자**: 심지언
-- **주소**: 성북구 정릉로 77 국민대학교 경영관
+**Status**: Not yet defined
+
+No external dependencies, third-party services, or integrations have been configured. This section should be updated to include:
+
+1. **Package Dependencies**: NPM/Yarn packages, libraries, and frameworks
+2. **Third-party APIs**: External services and API integrations
+3. **Database Services**: Database providers and connection details
+4. **Authentication Providers**: OAuth, social login, or other auth services
+5. **Cloud Services**: Hosting, storage, CDN, or other cloud infrastructure
+6. **Development Tools**: Linters, formatters, testing frameworks
+
+---
+
+**Note**: This is a blank repository. As development progresses, this document should be updated to reflect the actual architectural decisions and dependencies implemented in the project.
