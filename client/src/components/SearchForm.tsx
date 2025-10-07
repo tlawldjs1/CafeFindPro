@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Card } from '@/components/ui/card';
 import { Search } from 'lucide-react';
 
 const seoulDistricts = [
@@ -24,42 +25,47 @@ export default function SearchForm({ onSearch, isSearching = false }: SearchForm
   };
 
   return (
-    <section className="py-16 px-4 md:px-8">
+    <section className="py-20 px-4 md:px-8 bg-muted/30">
       <div className="max-w-4xl mx-auto">
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-8">
+        <h2 className="text-3xl md:text-5xl font-bold text-center mb-4">
           카공하기 좋은 카페 찾기
         </h2>
+        <p className="text-center text-muted-foreground mb-10 text-lg">
+          서울시 행정구역을 선택하고 검색해보세요
+        </p>
         
-        <div className="flex flex-col sm:flex-row gap-4 items-end">
-          <div className="flex-1 w-full">
-            <label className="block text-sm font-medium mb-2">
-              서울시 행정구역 선택
-            </label>
-            <Select value={selectedDistrict} onValueChange={setSelectedDistrict}>
-              <SelectTrigger data-testid="select-district" className="w-full">
-                <SelectValue placeholder="구를 선택하세요" />
-              </SelectTrigger>
-              <SelectContent>
-                {seoulDistricts.map(district => (
-                  <SelectItem key={district} value={district}>
-                    {district}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+        <Card className="p-8 shadow-lg">
+          <div className="flex flex-col sm:flex-row gap-4 items-end">
+            <div className="flex-1 w-full">
+              <label className="block text-base font-semibold mb-3">
+                서울시 행정구역 선택
+              </label>
+              <Select value={selectedDistrict} onValueChange={setSelectedDistrict}>
+                <SelectTrigger data-testid="select-district" className="w-full h-12 text-base">
+                  <SelectValue placeholder="구를 선택하세요" />
+                </SelectTrigger>
+                <SelectContent>
+                  {seoulDistricts.map(district => (
+                    <SelectItem key={district} value={district}>
+                      {district}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <Button 
+              onClick={handleSearch}
+              disabled={!selectedDistrict || isSearching}
+              size="lg"
+              className="w-full sm:w-auto gap-2 h-12 px-8 text-base"
+              data-testid="button-search"
+            >
+              <Search className="w-5 h-5" />
+              {isSearching ? '검색 중...' : '검색하기'}
+            </Button>
           </div>
-          
-          <Button 
-            onClick={handleSearch}
-            disabled={!selectedDistrict || isSearching}
-            size="lg"
-            className="w-full sm:w-auto gap-2"
-            data-testid="button-search"
-          >
-            <Search className="w-5 h-5" />
-            {isSearching ? '검색 중...' : '검색하기'}
-          </Button>
-        </div>
+        </Card>
       </div>
     </section>
   );
