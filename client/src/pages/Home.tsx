@@ -1,10 +1,13 @@
 import { useState } from 'react';
+import { Link } from 'wouter';
 import HeroSection from '@/components/HeroSection';
 import ProblemScenarios from '@/components/ProblemScenarios';
 import SearchForm from '@/components/SearchForm';
 import CafeResults from '@/components/CafeResults';
 import SubmissionForm from '@/components/SubmissionForm';
 import Footer from '@/components/Footer';
+import { Button } from '@/components/ui/button';
+import { Shield } from 'lucide-react';
 import type { CafeResult } from '@shared/schema';
 import { useToast } from '@/hooks/use-toast';
 
@@ -76,6 +79,17 @@ export default function Home() {
 
   return (
     <div className="min-h-screen">
+      <Link href="/admin">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="fixed top-4 right-4 z-50"
+          data-testid="link-admin"
+        >
+          <Shield className="w-5 h-5" />
+        </Button>
+      </Link>
+      
       <HeroSection />
       <ProblemScenarios />
       <SearchForm onSearch={handleSearch} isSearching={isSearching} />
