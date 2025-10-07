@@ -3,6 +3,7 @@ import HeroSection from '@/components/HeroSection';
 import ProblemScenarios from '@/components/ProblemScenarios';
 import SearchForm from '@/components/SearchForm';
 import CafeResults from '@/components/CafeResults';
+import CafeRankingSection from '@/components/CafeRankingSection';
 import SubmissionForm from '@/components/SubmissionForm';
 import Footer from '@/components/Footer';
 import type { CafeResult } from '@shared/schema';
@@ -80,6 +81,7 @@ export default function Home() {
       <ProblemScenarios />
       <SearchForm onSearch={handleSearch} isSearching={isSearching} />
       <CafeResults cafes={searchResults} district={searchedDistrict} />
+      <CafeRankingSection />
       <SubmissionForm onSubmit={handleSubmit} />
       <Footer />
     </div>
