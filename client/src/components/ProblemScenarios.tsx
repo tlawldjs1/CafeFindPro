@@ -21,25 +21,25 @@ const scenarios = [
 
 export default function ProblemScenarios() {
   return (
-    <section className="py-16 px-4 md:px-8 bg-muted/30">
+    <section className="py-12 px-4 md:px-8 bg-muted/30">
       <div className="max-w-6xl mx-auto">
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-4">
+        <h2 className="text-2xl md:text-3xl font-bold text-center mb-2">
           카공할 때 이런 경험 있으신가요?
         </h2>
-        <p className="text-center text-muted-foreground mb-12">
+        <p className="text-center text-muted-foreground mb-8 text-sm md:text-base">
           카파인드가 해결해드릴게요
         </p>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {scenarios.map((scenario, index) => {
             const Icon = scenario.icon;
             return (
-              <Card key={index} className="p-8 text-center hover-elevate">
-                <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-primary/10 flex items-center justify-center">
-                  <Icon className="w-10 h-10 text-primary" />
+              <Card key={index} className="p-6 text-center hover-elevate">
+                <div className="w-14 h-14 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center">
+                  <Icon className="w-7 h-7 text-primary" />
                 </div>
-                <h3 className="text-xl font-semibold mb-3">{scenario.title}</h3>
-                <p className="text-muted-foreground">{scenario.description}</p>
+                <h3 className="text-lg font-semibold mb-2">{scenario.title}</h3>
+                <p className="text-sm text-muted-foreground">{scenario.description}</p>
               </Card>
             );
           })}
