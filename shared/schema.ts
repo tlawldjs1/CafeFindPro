@@ -1,4 +1,4 @@
-import { pgTable, text, varchar, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, text, varchar, timestamp, serial } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -23,6 +23,14 @@ export const cafeSubmissions = pgTable("cafe_submissions", {
   timestamp: timestamp("timestamp", { withTimezone: true }).notNull().defaultNow(),
 });
 
+export const cafeClickLogs = pgTable("cafe_click_logs", {
+  id: serial("id").primaryKey(),
+  district: text("district").notNull(),
+  cafeName: text("cafe_name").notNull(),
+  cafeAddress: text("cafe_address").notNull(),
+  clickedAt: timestamp("clicked_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
 export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
   password: true,
@@ -39,12 +47,20 @@ export const insertCafeSubmissionSchema = createInsertSchema(cafeSubmissions).pi
   phoneNumber: true,
 });
 
+export const insertCafeClickLogSchema = createInsertSchema(cafeClickLogs).pick({
+  district: true,
+  cafeName: true,
+  cafeAddress: true,
+});
+
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
 export type SearchLog = typeof searchLogs.$inferSelect;
 export type InsertSearchLog = z.infer<typeof insertSearchLogSchema>;
 export type CafeSubmission = typeof cafeSubmissions.$inferSelect;
 export type InsertCafeSubmission = z.infer<typeof insertCafeSubmissionSchema>;
+export type CafeClickLog = typeof cafeClickLogs.$inferSelect;
+export type InsertCafeClickLog = z.infer<typeof insertCafeClickLogSchema>;
 
 export interface CafeResult {
   id: string;

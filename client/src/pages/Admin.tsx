@@ -5,7 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
-import type { SearchLog, CafeSubmission } from '@shared/schema';
+import type { SearchLog, CafeSubmission, CafeClickLog } from '@shared/schema';
 
 export default function Admin() {
   const { toast } = useToast();
@@ -14,6 +14,7 @@ export default function Admin() {
   const [password, setPassword] = useState('');
   const [searchLogs, setSearchLogs] = useState<SearchLog[]>([]);
   const [submissions, setSubmissions] = useState<CafeSubmission[]>([]);
+  const [cafeClickLogs, setCafeClickLogs] = useState<CafeClickLog[]>([]);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -23,9 +24,10 @@ export default function Admin() {
 
   const fetchData = async () => {
     try {
-      const [logsRes, submissionsRes] = await Promise.all([
+      const [logsRes, submissionsRes, clickLogsRes] = await Promise.all([
         fetch('/api/admin/search-logs'),
-        fetch('/api/admin/cafe-submissions')
+        fetch('/api/admin/cafe-submissions'),
+        fetch('/api/admin/cafe-click-logs')
       ]);
 
       if (logsRes.ok) {
@@ -36,6 +38,11 @@ export default function Admin() {
       if (submissionsRes.ok) {
         const subs = await submissionsRes.json();
         setSubmissions(subs);
+      }
+
+      if (clickLogsRes.ok) {
+        const clickLogs = await clickLogsRes.json();
+        setCafeClickLogs(clickLogs);
       }
     } catch (error) {
       console.error('Failed to fetch admin data:', error);
@@ -130,9 +137,10 @@ export default function Admin() {
         </div>
 
         <Tabs defaultValue="searches" className="w-full">
-          <TabsList className="grid w-full max-w-md grid-cols-2">
+          <TabsList className="grid w-full max-w-2xl grid-cols-3">
             <TabsTrigger value="searches" data-testid="tab-searches">검색 로그</TabsTrigger>
             <TabsTrigger value="submissions" data-testid="tab-submissions">카페 제보</TabsTrigger>
+            <TabsTrigger value="clicks" data-testid="tab-clicks">카페 클릭</TabsTrigger>
           </TabsList>
 
           <TabsContent value="searches" className="mt-6">
@@ -199,6 +207,44 @@ export default function Admin() {
                           <td className="py-3 px-4">{submission.phoneNumber}</td>
                           <td className="py-3 px-4 text-muted-foreground">
                             {new Date(submission.timestamp).toLocaleString('ko-KR')}
+                          </td>
+                        </tr>
+                      ))
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="clicks" className="mt-6">
+            <Card className="p-6">
+              <h2 className="text-xl font-semibold mb-4">카페 클릭 로그</h2>
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b">
+                      <th className="text-left py-3 px-4">구역</th>
+                      <th className="text-left py-3 px-4">카페명</th>
+                      <th className="text-left py-3 px-4">주소</th>
+                      <th className="text-left py-3 px-4">클릭 시간</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {cafeClickLogs.length === 0 ? (
+                      <tr>
+                        <td colSpan={4} className="py-8 text-center text-muted-foreground">
+                          클릭 기록이 없습니다
+                        </td>
+                      </tr>
+                    ) : (
+                      cafeClickLogs.map((log) => (
+                        <tr key={log.id} className="border-b" data-testid={`row-click-${log.id}`}>
+                          <td className="py-3 px-4">{log.district}</td>
+                          <td className="py-3 px-4">{log.cafeName}</td>
+                          <td className="py-3 px-4">{log.cafeAddress}</td>
+                          <td className="py-3 px-4 text-muted-foreground">
+                            {new Date(log.clickedAt).toLocaleString('ko-KR')}
                           </td>
                         </tr>
                       ))

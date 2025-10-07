@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertSearchLogSchema, insertCafeSubmissionSchema, type CafeResult } from "@shared/schema";
+import { insertSearchLogSchema, insertCafeSubmissionSchema, insertCafeClickLogSchema, type CafeResult } from "@shared/schema";
 import { z } from "zod";
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -196,6 +196,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Get cafe submissions error:", error);
       res.status(500).json({ error: "Failed to fetch cafe submissions" });
+    }
+  });
+
+  // Log cafe click endpoint
+  app.post("/api/cafe-click", async (req, res) => {
+    try {
+      const validated = insertCafeClickLogSchema.parse(req.body);
+      const clickLog = await storage.createCafeClickLog(validated);
+      res.json(clickLog);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ error: error.errors });
+      }
+      console.error("Cafe click log error:", error);
+      res.status(500).json({ error: "Failed to log cafe click" });
+    }
+  });
+
+  // Get cafe click logs endpoint
+  app.get("/api/admin/cafe-click-logs", async (req, res) => {
+    try {
+      const clickLogs = await storage.getCafeClickLogs();
+      res.json(clickLogs);
+    } catch (error) {
+      console.error("Get cafe click logs error:", error);
+      res.status(500).json({ error: "Failed to fetch cafe click logs" });
     }
   });
 

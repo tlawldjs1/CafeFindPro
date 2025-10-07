@@ -19,7 +19,7 @@ export default function CafeResults({ cafes, district }: CafeResultsProps) {
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {cafes.map(cafe => (
-            <CafeCard key={cafe.id} cafe={cafe} />
+            <CafeCard key={cafe.id} cafe={cafe} district={district} />
           ))}
         </div>
       </div>

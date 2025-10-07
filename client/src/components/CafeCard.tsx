@@ -5,10 +5,27 @@ import type { CafeResult } from '@shared/schema';
 
 interface CafeCardProps {
   cafe: CafeResult;
+  district: string;
 }
 
-export default function CafeCard({ cafe }: CafeCardProps) {
-  const handleClick = () => {
+export default function CafeCard({ cafe, district }: CafeCardProps) {
+  const handleClick = async () => {
+    try {
+      await fetch('/api/cafe-click', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          district,
+          cafeName: cafe.name,
+          cafeAddress: cafe.address,
+        }),
+      });
+    } catch (error) {
+      console.error('Failed to log cafe click:', error);
+    }
+    
     window.open(cafe.link, '_blank');
   };
 

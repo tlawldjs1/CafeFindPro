@@ -2,12 +2,15 @@ import {
   users, 
   searchLogs, 
   cafeSubmissions,
+  cafeClickLogs,
   type User, 
   type InsertUser,
   type SearchLog,
   type InsertSearchLog,
   type CafeSubmission,
-  type InsertCafeSubmission
+  type InsertCafeSubmission,
+  type CafeClickLog,
+  type InsertCafeClickLog
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc } from "drizzle-orm";
@@ -23,6 +26,9 @@ export interface IStorage {
   
   createCafeSubmission(submission: InsertCafeSubmission): Promise<CafeSubmission>;
   getAllCafeSubmissions(): Promise<CafeSubmission[]>;
+  
+  createCafeClickLog(log: InsertCafeClickLog): Promise<CafeClickLog>;
+  getCafeClickLogs(): Promise<CafeClickLog[]>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -66,6 +72,18 @@ export class DatabaseStorage implements IStorage {
 
   async getAllCafeSubmissions(): Promise<CafeSubmission[]> {
     return await db.select().from(cafeSubmissions).orderBy(desc(cafeSubmissions.timestamp));
+  }
+
+  async createCafeClickLog(log: InsertCafeClickLog): Promise<CafeClickLog> {
+    const [clickLog] = await db
+      .insert(cafeClickLogs)
+      .values(log)
+      .returning();
+    return clickLog;
+  }
+
+  async getCafeClickLogs(): Promise<CafeClickLog[]> {
+    return await db.select().from(cafeClickLogs).orderBy(desc(cafeClickLogs.clickedAt));
   }
 }
 
