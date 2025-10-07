@@ -1,0 +1,66 @@
+import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Search } from 'lucide-react';
+
+const seoulDistricts = [
+  '강남구', '강동구', '강북구', '강서구', '관악구', '광진구', '구로구', '금천구',
+  '노원구', '도봉구', '동대문구', '동작구', '마포구', '서대문구', '서초구', '성동구',
+  '성북구', '송파구', '양천구', '영등포구', '용산구', '은평구', '종로구', '중구', '중랑구'
+];
+
+interface SearchFormProps {
+  onSearch: (district: string) => void;
+}
+
+export default function SearchForm({ onSearch }: SearchFormProps) {
+  const [selectedDistrict, setSelectedDistrict] = useState('');
+
+  const handleSearch = () => {
+    if (selectedDistrict) {
+      console.log('Searching for:', selectedDistrict);
+      onSearch(selectedDistrict);
+    }
+  };
+
+  return (
+    <section className="py-16 px-4 md:px-8">
+      <div className="max-w-4xl mx-auto">
+        <h2 className="text-3xl md:text-4xl font-bold text-center mb-8">
+          카공하기 좋은 카페 찾기
+        </h2>
+        
+        <div className="flex flex-col sm:flex-row gap-4 items-end">
+          <div className="flex-1 w-full">
+            <label className="block text-sm font-medium mb-2">
+              서울시 행정구역 선택
+            </label>
+            <Select value={selectedDistrict} onValueChange={setSelectedDistrict}>
+              <SelectTrigger data-testid="select-district" className="w-full">
+                <SelectValue placeholder="구를 선택하세요" />
+              </SelectTrigger>
+              <SelectContent>
+                {seoulDistricts.map(district => (
+                  <SelectItem key={district} value={district}>
+                    {district}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          
+          <Button 
+            onClick={handleSearch}
+            disabled={!selectedDistrict}
+            size="lg"
+            className="w-full sm:w-auto gap-2"
+            data-testid="button-search"
+          >
+            <Search className="w-5 h-5" />
+            검색하기
+          </Button>
+        </div>
+      </div>
+    </section>
+  );
+}
