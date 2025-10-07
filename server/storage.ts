@@ -13,8 +13,14 @@ import {
   type InsertCafeClickLog
 } from "@shared/schema";
 import { db } from "./db";
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, sql } from "drizzle-orm";
 import { randomUUID } from "crypto";
+
+export interface CafeRanking {
+  cafeName: string;
+  cafeAddress: string;
+  clickCount: number;
+}
 
 export interface IStorage {
   getUser(id: string): Promise<User | undefined>;
@@ -29,6 +35,7 @@ export interface IStorage {
   
   createCafeClickLog(log: InsertCafeClickLog): Promise<CafeClickLog>;
   getCafeClickLogs(): Promise<CafeClickLog[]>;
+  getTopCafes(limit: number): Promise<CafeRanking[]>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -84,6 +91,21 @@ export class DatabaseStorage implements IStorage {
 
   async getCafeClickLogs(): Promise<CafeClickLog[]> {
     return await db.select().from(cafeClickLogs).orderBy(desc(cafeClickLogs.clickedAt));
+  }
+
+  async getTopCafes(limit: number): Promise<CafeRanking[]> {
+    const result = await db
+      .select({
+        cafeName: cafeClickLogs.cafeName,
+        cafeAddress: cafeClickLogs.cafeAddress,
+        clickCount: sql<number>`count(*)::int`,
+      })
+      .from(cafeClickLogs)
+      .groupBy(cafeClickLogs.cafeName, cafeClickLogs.cafeAddress)
+      .orderBy(desc(sql`count(*)`))
+      .limit(limit);
+    
+    return result;
   }
 }
 
