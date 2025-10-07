@@ -3,7 +3,6 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useToast } from '@/hooks/use-toast';
 
 interface SubmissionFormProps {
   onSubmit: (data: {
@@ -15,7 +14,6 @@ interface SubmissionFormProps {
 }
 
 export default function SubmissionForm({ onSubmit }: SubmissionFormProps) {
-  const { toast } = useToast();
   const [formData, setFormData] = useState({
     cafeName: '',
     cafeLocation: '',
@@ -25,12 +23,7 @@ export default function SubmissionForm({ onSubmit }: SubmissionFormProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Submitting cafe:', formData);
     onSubmit(formData);
-    toast({
-      title: '제보 완료',
-      description: '카페 정보가 성공적으로 제출되었습니다.'
-    });
     setFormData({
       cafeName: '',
       cafeLocation: '',

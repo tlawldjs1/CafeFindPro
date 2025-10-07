@@ -1,25 +1,19 @@
 import { Eye, Battery, Clock } from 'lucide-react';
 import { Card } from '@/components/ui/card';
-import scenario1 from '@assets/generated_images/Feeling_watched_scenario_illustration_6640c397.png';
-import scenario2 from '@assets/generated_images/No_outlets_scenario_illustration_ceda55c3.png';
-import scenario3 from '@assets/generated_images/Time_limit_scenario_illustration_b5aaa80f.png';
 
 const scenarios = [
   {
     icon: Eye,
-    image: scenario1,
     title: '눈치보이는 카공',
     description: '오래 앉아있으면 눈치가 보여서 집중이 안 돼요'
   },
   {
     icon: Battery,
-    image: scenario2,
     title: '충전기가 없어 곤란',
     description: '콘센트가 없어서 노트북 배터리가 금방 닳아요'
   },
   {
     icon: Clock,
-    image: scenario3,
     title: '이용 제한 시간 압박',
     description: '2시간 제한이라 공부하다 쫓겨나기 일쑤예요'
   }
@@ -40,18 +34,11 @@ export default function ProblemScenarios() {
           {scenarios.map((scenario, index) => {
             const Icon = scenario.icon;
             return (
-              <Card key={index} className="p-6 text-center hover-elevate">
-                <div className="w-48 h-48 mx-auto mb-4 rounded-lg overflow-hidden">
-                  <img 
-                    src={scenario.image} 
-                    alt={scenario.title} 
-                    className="w-full h-full object-cover"
-                  />
+              <Card key={index} className="p-8 text-center hover-elevate">
+                <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-primary/10 flex items-center justify-center">
+                  <Icon className="w-10 h-10 text-primary" />
                 </div>
-                <div className="flex items-center justify-center gap-2 mb-3">
-                  <Icon className="w-5 h-5 text-primary" />
-                  <h3 className="text-xl font-semibold">{scenario.title}</h3>
-                </div>
+                <h3 className="text-xl font-semibold mb-3">{scenario.title}</h3>
                 <p className="text-muted-foreground">{scenario.description}</p>
               </Card>
             );
