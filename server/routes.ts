@@ -20,22 +20,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(500).json({ error: "Naver API credentials not configured" });
       }
 
-      // Search queries for different types of cafes (프랜차이즈와 스터디카페 우선)
+      // Search queries for different types of cafes
       const searchQueries = [
+        `${district} 카공카페`,
         `${district} 스터디카페`,
+        `${district} 감성카페`,
         `${district} 스타벅스`,
         `${district} 투썸플레이스`,
         `${district} 메가커피`,
-        `${district} 이디야`,
-        `${district} 할리스`,
-        `${district} 카공카페`,
-        `${district} 감성카페`,
         `${district} 카페`,
       ];
 
-      const priorityResults: CafeResult[] = [];
-      const fallbackResults: CafeResult[] = [];
+      const franchiseResults: CafeResult[] = [];
+      const nonFranchiseResults: CafeResult[] = [];
       const seenIds = new Set<string>();
+      
+      const franchiseBrands = ['스타벅스', '투썸', '메가커피', '이디야', '할리스', '커피빈', '파스쿠찌', '엔제리너스'];
 
       for (const query of searchQueries) {
         try {
@@ -113,11 +113,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
                 link: `https://map.naver.com/v5/search/${encodeURIComponent(cleanName)}`
               };
 
-              // Prioritize results with district in address
-              if (address.includes(district)) {
-                priorityResults.push(cafeResult);
+              // Categorize into franchise vs non-franchise
+              const isFranchise = franchiseBrands.some(brand => cleanName.includes(brand));
+              
+              if (isFranchise) {
+                franchiseResults.push(cafeResult);
               } else {
-                fallbackResults.push(cafeResult);
+                nonFranchiseResults.push(cafeResult);
               }
             }
           }
@@ -126,8 +128,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       }
 
-      // Combine priority results first, then fallback if needed
-      const combinedResults = [...priorityResults, ...fallbackResults];
+      // Combine non-franchise cafes (prioritizing 카공카페 and individual cafes) with limited franchise cafes
+      const limitedFranchiseResults = franchiseResults.slice(0, 3);
+      const combinedResults = [...nonFranchiseResults, ...limitedFranchiseResults];
       const uniqueResults = combinedResults.slice(0, 12);
       
       res.json(uniqueResults);

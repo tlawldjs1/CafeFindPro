@@ -42,11 +42,11 @@ export default function CafeCard({ cafe }: CafeCardProps) {
       </div>
 
       <div className="flex flex-wrap gap-2">
-        <Badge variant="secondary" className="gap-1">
+        <Badge variant="secondary" className="bg-[#83d0f7] gap-1">
           <Plug className="w-3 h-3" />
           {cafe.hasOutlets ? '콘센트 있음' : '콘센트 없음'}
         </Badge>
-        <Badge variant="secondary" className="gap-1">
+        <Badge variant="secondary" className="bg-[#f79cdb] gap-1">
           <Users className="w-3 h-3" />
           좌석 {cafe.seatCount}석
         </Badge>
