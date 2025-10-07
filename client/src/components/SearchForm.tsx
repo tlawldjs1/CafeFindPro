@@ -31,7 +31,7 @@ export default function SearchForm({ onSearch, isSearching = false }: SearchForm
       </div>
       <div className="max-w-4xl mx-auto relative">
         <div className="relative flex justify-center mb-4">
-          <div className="absolute -inset-8 rounded-2xl blur-xl bg-[#6ba9ff36] text-[#000000]"></div>
+          <div className="absolute -inset-8 rounded-2xl blur-xl text-[#000000] bg-[#ffffffb8]"></div>
           <h2 className="text-3xl md:text-5xl font-bold text-center relative">
             카공하기 좋은 카페 찾기
           </h2>
