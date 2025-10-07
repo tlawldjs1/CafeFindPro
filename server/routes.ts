@@ -225,6 +225,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Get top cafes ranking endpoint
+  app.get("/api/top-cafes", async (req, res) => {
+    try {
+      const limit = parseInt(req.query.limit as string) || 5;
+      const topCafes = await storage.getTopCafes(limit);
+      res.json(topCafes);
+    } catch (error) {
+      console.error("Get top cafes error:", error);
+      res.status(500).json({ error: "Failed to fetch top cafes" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
