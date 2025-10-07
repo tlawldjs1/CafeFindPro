@@ -20,17 +20,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(500).json({ error: "Naver API credentials not configured" });
       }
 
-      // Search queries for different types of cafes
+      // Search queries for different types of cafes (프랜차이즈와 스터디카페 우선)
       const searchQueries = [
-        `${district} 카공카페`,
         `${district} 스터디카페`,
-        `${district} 감성카페`,
         `${district} 스타벅스`,
         `${district} 투썸플레이스`,
         `${district} 메가커피`,
         `${district} 이디야`,
         `${district} 할리스`,
-        `${district} 커피빈`,
+        `${district} 카공카페`,
+        `${district} 감성카페`,
         `${district} 카페`,
       ];
 
@@ -41,7 +40,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       for (const query of searchQueries) {
         try {
           const response = await fetch(
-            `https://openapi.naver.com/v1/search/local.json?query=${encodeURIComponent(query)}&display=10`,
+            `https://openapi.naver.com/v1/search/local.json?query=${encodeURIComponent(query)}&display=15`,
             {
               headers: {
                 'X-Naver-Client-Id': clientId,
@@ -59,7 +58,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
           
           if (data.items && Array.isArray(data.items)) {
             for (const item of data.items) {
-              const cleanName = item.title.replace(/<[^>]*>/g, '');
+              // HTML 태그 제거 및 HTML 엔티티 디코딩
+              let cleanName = item.title.replace(/<[^>]*>/g, '');
+              cleanName = cleanName
+                .replace(/&amp;/g, '&')
+                .replace(/&lt;/g, '<')
+                .replace(/&gt;/g, '>')
+                .replace(/&quot;/g, '"')
+                .replace(/&#39;/g, "'");
+              
               const address = item.roadAddress || item.address || '';
               
               const uniqueId = `${cleanName}-${address}`;
@@ -121,7 +128,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Combine priority results first, then fallback if needed
       const combinedResults = [...priorityResults, ...fallbackResults];
-      const uniqueResults = combinedResults.slice(0, 5);
+      const uniqueResults = combinedResults.slice(0, 8);
       
       res.json(uniqueResults);
     } catch (error) {
