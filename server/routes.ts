@@ -30,13 +30,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
         `${district} 카페`,
       ];
 
-      const allResults: CafeResult[] = [];
-      const seenNames = new Set<string>();
+      const priorityResults: CafeResult[] = [];
+      const fallbackResults: CafeResult[] = [];
+      const seenIds = new Set<string>();
 
       for (const query of searchQueries) {
         try {
           const response = await fetch(
-            `https://openapi.naver.com/v1/search/local.json?query=${encodeURIComponent(query)}&display=5`,
+            `https://openapi.naver.com/v1/search/local.json?query=${encodeURIComponent(query)}&display=10`,
             {
               headers: {
                 'X-Naver-Client-Id': clientId,
@@ -54,24 +55,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
           
           if (data.items && Array.isArray(data.items)) {
             for (const item of data.items) {
-              // Remove HTML tags from name
               const cleanName = item.title.replace(/<[^>]*>/g, '');
-              
-              // Skip duplicates
-              if (seenNames.has(cleanName)) {
-                continue;
-              }
-              seenNames.add(cleanName);
-
-              // Parse and clean address
               const address = item.roadAddress || item.address || '';
               
-              // Determine if it has outlets (franchise cafes typically have outlets)
+              const uniqueId = `${cleanName}-${address}`;
+              if (seenIds.has(uniqueId)) {
+                continue;
+              }
+              seenIds.add(uniqueId);
+
               const hasOutlets = ['스타벅스', '투썸', '메가커피', '이디야', '할리스', '커피빈', '파스쿠찌', '엔제리너스', '스터디'].some(
                 brand => cleanName.includes(brand)
               );
 
-              // Estimate seat count based on category
               let seatCount = 30;
               if (cleanName.includes('스터디카페')) {
                 seatCount = 50;
@@ -79,7 +75,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
                 seatCount = 60;
               }
 
-              // Study rating based on type
               let studyRating = 3;
               if (cleanName.includes('스터디') || cleanName.includes('카공')) {
                 studyRating = 5;
@@ -87,15 +82,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
                 studyRating = 4;
               }
 
-              allResults.push({
-                id: item.link || `${cleanName}-${Date.now()}`,
+              const cafeResult: CafeResult = {
+                id: item.link || uniqueId,
                 name: cleanName,
                 address: address,
                 hasOutlets,
                 seatCount,
                 studyRating,
                 link: item.link || `https://map.naver.com/v5/search/${encodeURIComponent(cleanName + ' ' + address)}`
-              });
+              };
+
+              // Prioritize results with district in address
+              if (address.includes(district)) {
+                priorityResults.push(cafeResult);
+              } else {
+                fallbackResults.push(cafeResult);
+              }
             }
           }
         } catch (error) {
@@ -103,8 +105,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       }
 
-      // Return top 5 unique results
-      const uniqueResults = allResults.slice(0, 5);
+      // Combine priority results first, then fallback if needed
+      const combinedResults = [...priorityResults, ...fallbackResults];
+      const uniqueResults = combinedResults.slice(0, 5);
       
       res.json(uniqueResults);
     } catch (error) {

@@ -78,7 +78,7 @@ export default function Home() {
     <div className="min-h-screen">
       <HeroSection />
       <ProblemScenarios />
-      <SearchForm onSearch={handleSearch} />
+      <SearchForm onSearch={handleSearch} isSearching={isSearching} />
       <CafeResults cafes={searchResults} district={searchedDistrict} />
       <SubmissionForm onSubmit={handleSubmit} />
       <Footer />

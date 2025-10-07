@@ -11,6 +11,7 @@ import {
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc } from "drizzle-orm";
+import { randomUUID } from "crypto";
 
 export interface IStorage {
   getUser(id: string): Promise<User | undefined>;
@@ -38,7 +39,7 @@ export class DatabaseStorage implements IStorage {
   async createUser(insertUser: InsertUser): Promise<User> {
     const [user] = await db
       .insert(users)
-      .values(insertUser)
+      .values({ ...insertUser, id: randomUUID() })
       .returning();
     return user;
   }
@@ -46,7 +47,7 @@ export class DatabaseStorage implements IStorage {
   async createSearchLog(log: InsertSearchLog): Promise<SearchLog> {
     const [searchLog] = await db
       .insert(searchLogs)
-      .values(log)
+      .values({ ...log, id: randomUUID() })
       .returning();
     return searchLog;
   }
@@ -58,7 +59,7 @@ export class DatabaseStorage implements IStorage {
   async createCafeSubmission(submission: InsertCafeSubmission): Promise<CafeSubmission> {
     const [cafeSubmission] = await db
       .insert(cafeSubmissions)
-      .values(submission)
+      .values({ ...submission, id: randomUUID() })
       .returning();
     return cafeSubmission;
   }

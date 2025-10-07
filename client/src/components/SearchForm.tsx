@@ -11,14 +11,14 @@ const seoulDistricts = [
 
 interface SearchFormProps {
   onSearch: (district: string) => void;
+  isSearching?: boolean;
 }
 
-export default function SearchForm({ onSearch }: SearchFormProps) {
+export default function SearchForm({ onSearch, isSearching = false }: SearchFormProps) {
   const [selectedDistrict, setSelectedDistrict] = useState('');
 
   const handleSearch = () => {
     if (selectedDistrict) {
-      console.log('Searching for:', selectedDistrict);
       onSearch(selectedDistrict);
     }
   };
@@ -51,13 +51,13 @@ export default function SearchForm({ onSearch }: SearchFormProps) {
           
           <Button 
             onClick={handleSearch}
-            disabled={!selectedDistrict}
+            disabled={!selectedDistrict || isSearching}
             size="lg"
             className="w-full sm:w-auto gap-2"
             data-testid="button-search"
           >
             <Search className="w-5 h-5" />
-            검색하기
+            {isSearching ? '검색 중...' : '검색하기'}
           </Button>
         </div>
       </div>
