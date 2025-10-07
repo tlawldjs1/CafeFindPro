@@ -87,13 +87,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
               }
 
               const cafeResult: CafeResult = {
-                id: item.link || uniqueId,
+                id: uniqueId,
                 name: cleanName,
                 address: address,
                 hasOutlets,
                 seatCount,
                 studyRating,
-                link: item.link || `https://map.naver.com/v5/search/${encodeURIComponent(cleanName)}`
+                link: `https://map.naver.com/v5/search/${encodeURIComponent(cleanName)}`
               };
 
               // Prioritize results with district in address
